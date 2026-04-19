@@ -1,0 +1,1142 @@
+{
+  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "ddfjju9zuq61ogf"
+  },
+  "spec": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Rebuild of the Smart counter value in the cellar of \"Am Rischbleek 40d\" based on the Shelly 3EM Pro installed nearby.\nCounter Reading  was 647 kWh on 29.12.2024",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "light-blue",
+              "mode": "fixed"
+            },
+            "decimals": 2,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 5,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "last_reading =\r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: -90d)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"alias.0.smartcounter.reading\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e last()\r\n  |\u003e findRecord(idx:0, fn: (key) =\u003e true)\r\n\r\nt0 = last_reading._time\r\ncounter_offset= last_reading._value\r\n\r\n// using prefix \"m\" for _measurement here\r\nmGrid = \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\"\r\n\r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: t0)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] ==  mGrid)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e elapsed(columnName: \"dt\", unit: 1ms)\r\n  |\u003e map(fn: (r) =\u003e ({ r with kiloWattHours:  if r._value \u003e 0.0 then r._value * float(v:r.dt) / 3600000000.0 else 0.0 })) \r\n  |\u003e drop(columns: [\"_value\", \"dt\"])\r\n  |\u003e rename(columns: {kiloWattHours: \"_value\"})\r\n  |\u003e sum()\r\n  |\u003e map(fn: (r) =\u003e ({ r with _value: r._value + counter_offset }))\r\n",
+            "refId": "A"
+          }
+        ],
+        "title": "Smart Counter",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Displays the current power consumption from public grid of \"Am Rischbleek 40d\". Positive values mean that energy is pulled from public grid, negative values indicated delivery to the public grid.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 1500,
+            "min": -1500,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-purple",
+                  "value": 0
+                },
+                {
+                  "color": "light-purple",
+                  "value": -300
+                },
+                {
+                  "color": "dark-green",
+                  "value": -50
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 50
+                },
+                {
+                  "color": "red",
+                  "value": 300
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 4,
+          "x": 5,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true,
+          "sizing": "auto",
+          "text": {
+            "valueSize": 24
+          }
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "from(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |\u003e yield(name: \"mean\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Grid Power consumption",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Displays the current power generation of the solar panels installed on garage roof of  \"Am Rischbleek 40d\". Positive values mean that energy is pulled from public grid, negative values indicated delivery to the public grid.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 1500,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "super-light-green",
+                  "value": 0
+                },
+                {
+                  "color": "light-green",
+                  "value": 300
+                },
+                {
+                  "color": "green",
+                  "value": 600
+                },
+                {
+                  "color": "semi-dark-green",
+                  "value": 900
+                },
+                {
+                  "color": "dark-green",
+                  "value": 1200
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 4,
+          "x": 9,
+          "y": 0
+        },
+        "id": 7,
+        "options": {
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true,
+          "sizing": "auto",
+          "text": {
+            "valueSize": 24
+          }
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "from(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"mqtt.0.solar.116183777340.0.power\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |\u003e yield(name: \"mean\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Solar power generation",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Displays the current power generation of the solar panels installed on garage roof of  \"Am Rischbleek 40d\". Positive values mean that energy is pulled from public grid, negative values indicated delivery to the public grid.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 999,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "light-orange",
+                  "value": 0
+                },
+                {
+                  "color": "dark-orange",
+                  "value": 200
+                },
+                {
+                  "color": "semi-dark-red",
+                  "value": 400
+                },
+                {
+                  "color": "dark-red",
+                  "value": 600
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 4,
+          "x": 13,
+          "y": 0
+        },
+        "id": 8,
+        "options": {
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true,
+          "sizing": "auto",
+          "text": {
+            "valueSize": 24
+          }
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "from(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"mqtt.0.T2SGF72095.ACDISPLAY\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |\u003e yield(name: \"BatSaldo\")",
+            "refId": "A"
+          }
+        ],
+        "title": "From Battery",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Displays the current power generation of the solar panels installed on garage roof of  \"Am Rischbleek 40d\". Positive values mean that energy is pulled from public grid, negative values indicated delivery to the public grid.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 1200,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "super-light-green",
+                  "value": 0
+                },
+                {
+                  "color": "light-green",
+                  "value": 50
+                },
+                {
+                  "color": "green",
+                  "value": 200
+                },
+                {
+                  "color": "semi-dark-green",
+                  "value": 400
+                },
+                {
+                  "color": "dark-green",
+                  "value": 600
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 4,
+          "x": 17,
+          "y": 0
+        },
+        "id": 9,
+        "options": {
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true,
+          "sizing": "auto",
+          "text": {
+            "valueSize": 24
+          }
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "from(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"mqtt.0.T2MG2CAA11.ACDISPLAY\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |\u003e yield(name: \"BatSaldo\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Into Battery",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Grid Energy demand and Total Energy consumption  over the period indicated below.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 35,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "kwatth"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "GridEnergy"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "consumedEnergy"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "yellow",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "_time"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "time: HH:mm"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 14,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "id": 4,
+        "options": {
+          "barRadius": 0.05,
+          "barWidth": 0.9,
+          "fullHighlight": false,
+          "groupWidth": 0.62,
+          "legend": {
+            "calcs": [
+              "min",
+              "max",
+              "mean"
+            ],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "auto",
+          "stacking": "none",
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "multi",
+            "sort": "none"
+          },
+          "xTickLabelRotation": 90,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "import \"date\"\r\nimport \"timezone\"\r\noption location = timezone.location(name: \"Europe/Berlin\")\r\n\r\nt0 = date.truncate(t: -24h, unit: 1h)\r\nt1 = now()\r\n\r\nfrom(bucket: \"homedata_reduced\")\r\n\t|\u003e range(start: t0, stop: t1)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /cachedEnergyData\\./)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n\t|\u003e aggregateWindow(every: 1h, column: \"_value\", fn:first, timeSrc: \"_start\")\r\n\t|\u003e difference(columns: [\"_value\"])\r\n\t|\u003e timeShift(duration: -30m)\r\n\t|\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n\t|\u003e pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n\t|\u003e map (fn: (r) =\u003e ({\r\n\t\t\t\t\t\t\t_time: r._time, \r\n\t\t\t\t\t\t\ttoBatEnergy: -r[\"cachedEnergyData.toBatEnergy\"], \r\n\t\t\t\t\t\t\tfromBatEnergy: r[\"cachedEnergyData.fromBatEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyPos: r[\"cachedEnergyData.fromGridEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyNeg: -r[\"cachedEnergyData.toGridEnergy\"], \r\n\t\t\t\t\t\t\tSolarEnergy: r[\"cachedEnergyData.solarEnergy\"],\r\n\t\t\t\t\t\t}))\r\n\t|\u003e map(fn: (r) =\u003e ({r with consumedEnergy: (r.GridEnergyPos + r.GridEnergyNeg + r.SolarEnergy + r.fromBatEnergy + r.toBatEnergy)}))\r\n\t|\u003e sort(columns: [\"_time\"], desc: false)\r\n\t|\u003e yield(name: \"result\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Hourly power grid energy demand and total power consumption ",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "GridEnergy2": true,
+                "GridEnergyNeg": true,
+                "SolarEnergy": true,
+                "fromBatEnergy": true,
+                "toBatEnergy": true
+              },
+              "includeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "GridEnergyPos": "GridEnergy",
+                "_time": "Date",
+                "consumedEnergy": ""
+              }
+            }
+          }
+        ],
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "description": "Power consumption (positive) or generation (negative) over the period indicated below.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 35,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "_time"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "time: DD.MM.YYYY"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "GridEnergy"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "consumedEnergy"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "yellow",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 18,
+          "w": 24,
+          "x": 0,
+          "y": 22
+        },
+        "id": 6,
+        "options": {
+          "barRadius": 0,
+          "barWidth": 0.9,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [
+              "min",
+              "max",
+              "mean"
+            ],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "always",
+          "stacking": "none",
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "multi",
+            "sort": "none"
+          },
+          "xField": "_time",
+          "xTickLabelRotation": 90,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "import \"date\"\r\nimport \"timezone\"\r\noption location = timezone.location(name: \"Europe/Berlin\")\r\n\r\nt0 = date.truncate(t: -28d, unit: 1d)\r\nt1 = v.timeRangeStop\r\n\r\nfrom(bucket: \"homedata_reduced\")\r\n\t|\u003e range(start: t0, stop: t1)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /cachedEnergyData\\./)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n\t|\u003e aggregateWindow(every: 1d, column: \"_value\", fn:first, timeSrc: \"_start\")\r\n\t|\u003e difference(columns: [\"_value\"])\r\n\t|\u003e timeShift(duration: -12h)\r\n\t|\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n\t|\u003e pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n\t|\u003e map (fn: (r) =\u003e ({\r\n\t\t\t\t\t\t\t_time: r._time, \r\n\t\t\t\t\t\t\ttoBatEnergy: -r[\"cachedEnergyData.toBatEnergy\"], \r\n\t\t\t\t\t\t\tfromBatEnergy: r[\"cachedEnergyData.fromBatEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyPos: r[\"cachedEnergyData.fromGridEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyNeg: -r[\"cachedEnergyData.toGridEnergy\"], \r\n\t\t\t\t\t\t\tSolarEnergy: r[\"cachedEnergyData.solarEnergy\"],\r\n\t\t\t\t\t\t}))\r\n\t|\u003e map(fn: (r) =\u003e ({r with consumedEnergy: (r.GridEnergyPos + r.GridEnergyNeg + r.SolarEnergy + r.fromBatEnergy + r.toBatEnergy)}))\r\n\t|\u003e sort(columns: [\"_time\"], desc: false)\r\n\t|\u003e yield(name: \"result\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Daily Grid Demand Energy and Consumed Energy (Barchart)",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "GridEnergy2": true,
+                "GridEnergyNeg": true,
+                "SolarEnergy": true,
+                "fromBatEnergy": true,
+                "toBatEnergy": true
+              },
+              "includeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "GridEnergyPos": "GridEnergy",
+                "_time": "Date"
+              }
+            }
+          }
+        ],
+        "transparent": true,
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "-- Dashboard --"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "filterable": false,
+              "inspect": false,
+              "minWidth": 50
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "kwatth"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "GridEnergy"
+              },
+              "properties": [
+                {
+                  "id": "custom.width"
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "mode": "basic",
+                    "type": "gauge"
+                  }
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "consumedEnergy"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "mode": "basic",
+                    "type": "gauge"
+                  }
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "_time"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 120
+                },
+                {
+                  "id": "unit",
+                  "value": "time: DD.MM.YYYY"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 30,
+          "w": 24,
+          "x": 0,
+          "y": 40
+        },
+        "id": 10,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "enablePagination": false,
+            "fields": [
+              "consumedEnergy",
+              "GridEnergyPos"
+            ],
+            "reducer": [
+              "mean"
+            ],
+            "show": true
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "11.5.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "-- Dashboard --"
+            },
+            "panelId": 6,
+            "refId": "A"
+          }
+        ],
+        "title": "Daily Grid Demand Energy and Consumed Energy",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "GridEnergy2": true,
+                "GridEnergyNeg": true,
+                "SolarEnergy": true,
+                "fromBatEnergy": true,
+                "toBatEnergy": true
+              },
+              "includeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "GridEnergyPos": "GridEnergy"
+              }
+            }
+          }
+        ],
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "area"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "super-light-yellow"
+                },
+                {
+                  "color": "#010101",
+                  "value": -50
+                },
+                {
+                  "color": "super-light-red",
+                  "value": 50
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 70
+        },
+        "id": 2,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": false
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.5.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "from(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |\u003e yield(name: \"mean\")",
+            "refId": "A"
+          }
+        ],
+        "title": "Total Power consumption over time",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "log": 10,
+                "type": "log"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "min": 1,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Küche"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "#51555a",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 24,
+          "x": 0,
+          "y": 82
+        },
+        "id": 5,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.5.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+            },
+            "query": "import \"dict\"\r\nimport \"strings\"\r\n\r\ntapoDevice = (tapoId) =\u003e {\r\n    tapoDevices =\r\n        dict.fromList(\r\n            pairs: [\r\n                {key: \"8022150810927D9ECA0B3C3A1E79977D204A5418\", value: \"#3 Router/PC\"},\r\n                {key: \"8022413CC9E723E7FC057AD31EDD3D29206D1CBA\", value: \"#7 Pumpe Heizkreislauf\"},\r\n                {key: \"802244049CCDD7C0F17BC3D8862CA429204A698D\", value: \"#5 Geschirrspüler\"},\r\n                {key: \"802244430ABB337537E9507FE737DBF9204ABE4F\", value: \"#2 Kühlschrank\"},\r\n                {key: \"80225122541812548DCA6FAA73B86AF9204A11D5\", value: \"#4 Waschmaschine\"},\r\n                {key: \"8022AC1C757C4E11B13BFAE80F82534B206DD1CD\", value: \"#6 Gefrierschrank\"},\r\n                {key: \"8022CA342CADDC0889CA414B56ED977A1FA4EEA7\", value: \"#1 Fernseher\"},\r\n                {key: \"8022D37C06199EA87CF24F8B01449F10206DF8DB\", value: \"#8 Klimagerät\"},\r\n            ],\r\n        )\r\n    name = dict.get(dict: tapoDevices, key: tapoId, default: \"No known Tapo Device.\")\r\n\r\n    return name\r\n}\r\n\r\np110_devices = \r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /tapo.0.[0-9A-Z]*.current/)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: 60s, fn: mean, createEmpty: true)\r\n  |\u003e map(fn: (r) =\u003e ({r with _measurement: tapoDevice(tapoId: strings.substring(v:r._measurement, start:7, end:47)) }))\r\n\r\nunterverteilung_devices = \r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /alias.0.power.(herd|küche)/)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: 60s, fn: mean, createEmpty: true)\r\n  |\u003e movingAverage(n: 10)\r\n\r\nunion(tables: [p110_devices, unterverteilung_devices])\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])",
+            "refId": "A"
+          }
+        ],
+        "title": "Tapo Power Measurements",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "includeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "alias.0.power.herd": "Herd",
+                "alias.0.power.küche": "Küche"
+              }
+            }
+          }
+        ],
+        "type": "timeseries"
+      }
+    ],
+    "preload": false,
+    "refresh": "10s",
+    "schemaVersion": 42,
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Shelly 3EM Pro Measurement Copy",
+    "weekStart": ""
+  }
+}
