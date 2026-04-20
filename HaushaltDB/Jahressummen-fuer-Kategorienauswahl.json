@@ -1,0 +1,693 @@
+{
+  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "defjo23rd78mpsc"
+  },
+  "spec": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "cefbjrlzoh3i8d"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": true,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 24,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "links": [
+              {
+                "title": "Jahresdetails",
+                "url": "http://adkso5yy12kpdxo2.myfritz.net:3100/d/dehwbxp0sfncwd/kategorien?orgId=1\u0026from=${__data.fields.Jahr}-01-01T00:00:00\u0026to=${__data.fields.Jahr}-12-31T22:59:59"
+              }
+            ],
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 23,
+          "w": 22,
+          "x": 0,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "barRadius": 0.1,
+          "barWidth": 0.75,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "auto",
+          "stacking": "normal",
+          "tooltip": {
+            "hideZeros": true,
+            "mode": "multi",
+            "sort": "desc"
+          },
+          "xField": "Jahr\\Kategoriename",
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "columns": [],
+            "datasource": {
+              "type": "yesoreyeram-infinity-datasource",
+              "uid": "cefbjrlzoh3i8d"
+            },
+            "filters": [],
+            "format": "table",
+            "global_query_id": "",
+            "parser": "backend",
+            "refId": "A",
+            "root_selector": "Table1",
+            "source": "url",
+            "type": "json",
+            "url": "/api/ExecQuery",
+            "url_options": {
+              "body_content_type": "text/plain",
+              "body_type": "raw",
+              "data": "select \r\n\tDATEPART(year,Valuta) AS [Jahr],\r\n\tKategorieID1,\r\n\tKategoriename,\r\n\t-SUM(Betrag) as Betrag\r\nfrom Buchung inner join Kategorie on Buchung.KategorieID1 = Kategorie.KategorieID\r\nwhere Kategorie.SortierID not in (100, 462, 465) and Kategorie.Kategoriename in (${Kategorien:sqlstring}) and (Buchung.Buchungstyp=3) \r\ngroup by \r\n\tDATEPART(year,Valuta),\r\n\tKategorieID1,\r\n\tKategoriename\r\n",
+              "headers": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                },
+                {
+                  "key": "Accept",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST"
+            }
+          }
+        ],
+        "title": "Ausgaben pro Jahr für Kategorie(n): ${Kategorien}",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "KategorieID1": true,
+                "Kategoriename": false
+              },
+              "includeByName": {},
+              "indexByName": {
+                "Betrag": 2,
+                "Jahr": 0,
+                "KategorieID1": 3,
+                "Kategoriename": 1
+              },
+              "renameByName": {}
+            }
+          },
+          {
+            "id": "groupingToMatrix",
+            "options": {
+              "columnField": "Kategoriename",
+              "emptyValue": "empty",
+              "rowField": "Jahr",
+              "valueField": "Betrag"
+            }
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Effekten": true,
+                "Eröffnungssaldo": true
+              },
+              "includeByName": {},
+              "indexByName": {
+                "Anschaffungskosten": 40,
+                "Bankgebühren": 5,
+                "Benzin": 17,
+                "Effekten": 6,
+                "Eröffnungssaldo": 33,
+                "GEZ-Gebühren": 13,
+                "Geschenke": 23,
+                "Hanna": 37,
+                "Haustiere": 28,
+                "Heizung": 9,
+                "Hobbies": 27,
+                "Jahr\\Kategoriename": 0,
+                "Kfz-Versicherung, Kfz-Steuer": 18,
+                "Kleidung": 3,
+                "Krankenversicherungsbeitrag": 41,
+                "Körperpflege, Drogerieartikel": 20,
+                "Lisa": 36,
+                "Medikamente": 21,
+                "Möbel": 8,
+                "Nahrungsmittel": 1,
+                "Oma Lilo": 39,
+                "Reparaturen, Renovierung": 12,
+                "Restaurantbesuche": 2,
+                "Siemens Casino": 31,
+                "Sonstige Fahrzeugkosten": 19,
+                "Sonstige Freizeitausgaben": 29,
+                "Sonstige Haushaltskosten": 22,
+                "Sonstige Wohnungskosten": 15,
+                "Sonstiges": 35,
+                "Steuer": 38,
+                "Strom": 11,
+                "Tageszeitung": 32,
+                "Taschengeld": 34,
+                "Telefon": 14,
+                "Unterhaltungselektronik": 16,
+                "Urlaub": 4,
+                "Veranstaltungen": 25,
+                "Vereinsbeiträge": 24,
+                "Versicherungen": 30,
+                "Wasser": 10,
+                "Zeitschriften": 26,
+                "Öffentliche Verkehrsmittel": 7
+              },
+              "renameByName": {
+                "Jahr\\Kategoriename": "Jahr"
+              }
+            }
+          }
+        ],
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "cefbjrlzoh3i8d"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": true,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 24,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": true,
+            "links": [
+              {
+                "targetBlank": true,
+                "title": "Jahresdetails",
+                "url": "https://adkso5yy12kpdxo2.myfritz.net:3101/d/dehwbxp0sfncwd/kategorien?orgId=1\u0026from=${__data.fields.Jahr}-01-01T00:00:00\u0026to=${__data.fields.Jahr}-12-31T22:59:59"
+              }
+            ],
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 27,
+          "w": 22,
+          "x": 0,
+          "y": 23
+        },
+        "id": 1,
+        "options": {
+          "barRadius": 0.1,
+          "barWidth": 0.75,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "never",
+          "stacking": "normal",
+          "text": {
+            "valueSize": 10
+          },
+          "tooltip": {
+            "hideZeros": true,
+            "mode": "multi",
+            "sort": "desc"
+          },
+          "xField": "Jahr\\Kategoriename",
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "columns": [],
+            "datasource": {
+              "type": "yesoreyeram-infinity-datasource",
+              "uid": "cefbjrlzoh3i8d"
+            },
+            "filters": [],
+            "format": "table",
+            "global_query_id": "",
+            "parser": "backend",
+            "refId": "A",
+            "root_selector": "Table1",
+            "source": "url",
+            "type": "json",
+            "url": "/api/ExecQuery",
+            "url_options": {
+              "body_content_type": "text/plain",
+              "body_type": "raw",
+              "data": "select \r\n\tDATEPART(year,Valuta) AS [Jahr],\r\n\tKategorieID1,\r\n\tKategoriename,\r\n\tSUM(Betrag) as Betrag\r\nfrom Buchung inner join Kategorie on Buchung.KategorieID1 = Kategorie.KategorieID\r\nwhere Kategorie.SortierID in (100, 462, 465) and (Buchung.Buchungstyp=3) \r\ngroup by \r\n\tDATEPART(year,Valuta),\r\n\tKategorieID1,\r\n\tKategoriename\r\n",
+              "headers": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                },
+                {
+                  "key": "Accept",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST"
+            }
+          }
+        ],
+        "title": "Einnahmen pro Jahr",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "KategorieID1": true,
+                "Kategoriename": false
+              },
+              "includeByName": {},
+              "indexByName": {
+                "Betrag": 2,
+                "Jahr": 0,
+                "KategorieID1": 3,
+                "Kategoriename": 1
+              },
+              "renameByName": {}
+            }
+          },
+          {
+            "id": "groupingToMatrix",
+            "options": {
+              "columnField": "Kategoriename",
+              "emptyValue": "empty",
+              "rowField": "Jahr",
+              "valueField": "Betrag"
+            }
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "includeByName": {},
+              "indexByName": {
+                "Angelika": 9,
+                "Dividende": 4,
+                "Gehalt Lothar": 1,
+                "Jahr\\Kategoriename": 0,
+                "Kindergeld": 5,
+                "Lohn Angelika": 6,
+                "Rente Lothar": 2,
+                "Siemens Betriebsrente ": 7,
+                "Sonstige Einkünfte": 8,
+                "Trinkgeld Angelika": 10,
+                "Zinsen": 3
+              },
+              "renameByName": {
+                "Jahr\\Kategoriename": "Jahr"
+              }
+            }
+          }
+        ],
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "cefbjrlzoh3i8d"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": true,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 24,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "links": [
+              {
+                "title": "Jahresdetails",
+                "url": "http://adkso5yy12kpdxo2.myfritz.net:3100/d/dehwbxp0sfncwd/kategorien?orgId=1\u0026from=${__data.fields.Jahr}-01-01T00:00:00\u0026to=${__data.fields.Jahr}-12-31T22:59:59"
+              }
+            ],
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 26,
+          "w": 22,
+          "x": 0,
+          "y": 50
+        },
+        "id": 2,
+        "options": {
+          "barRadius": 0.1,
+          "barWidth": 0.75,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "auto",
+          "stacking": "normal",
+          "tooltip": {
+            "hideZeros": true,
+            "mode": "multi",
+            "sort": "desc"
+          },
+          "xField": "Jahr\\Kategoriename",
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "12.4.2",
+        "targets": [
+          {
+            "columns": [],
+            "datasource": {
+              "type": "yesoreyeram-infinity-datasource",
+              "uid": "cefbjrlzoh3i8d"
+            },
+            "filters": [],
+            "format": "table",
+            "global_query_id": "",
+            "parser": "backend",
+            "refId": "A",
+            "root_selector": "Table1",
+            "source": "url",
+            "type": "json",
+            "url": "/api/ExecQuery",
+            "url_options": {
+              "body_content_type": "text/plain",
+              "body_type": "raw",
+              "data": "select \r\n\tDATEPART(year,Valuta) AS [Jahr],\r\n\tKategorieID1,\r\n\tKategoriename,\r\n\t-SUM(Betrag) as Betrag\r\nfrom Buchung inner join Kategorie on Buchung.KategorieID1 = Kategorie.KategorieID\r\nwhere Kategorie.SortierID not in (100, 462, 465) and (Buchung.Buchungstyp=3) \r\ngroup by \r\n\tDATEPART(year,Valuta),\r\n\tKategorieID1,\r\n\tKategoriename\r\n",
+              "headers": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                },
+                {
+                  "key": "Accept",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST"
+            }
+          }
+        ],
+        "title": "Ausgaben pro Jahr",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "KategorieID1": true,
+                "Kategoriename": false
+              },
+              "includeByName": {},
+              "indexByName": {
+                "Betrag": 2,
+                "Jahr": 0,
+                "KategorieID1": 3,
+                "Kategoriename": 1
+              },
+              "renameByName": {}
+            }
+          },
+          {
+            "id": "groupingToMatrix",
+            "options": {
+              "columnField": "Kategoriename",
+              "emptyValue": "empty",
+              "rowField": "Jahr",
+              "valueField": "Betrag"
+            }
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Effekten": true,
+                "Eröffnungssaldo": true
+              },
+              "includeByName": {},
+              "indexByName": {
+                "Anschaffungskosten": 40,
+                "Bankgebühren": 5,
+                "Benzin": 17,
+                "Effekten": 6,
+                "Eröffnungssaldo": 33,
+                "GEZ-Gebühren": 13,
+                "Geschenke": 23,
+                "Hanna": 37,
+                "Haustiere": 28,
+                "Heizung": 9,
+                "Hobbies": 27,
+                "Jahr\\Kategoriename": 0,
+                "Kfz-Versicherung, Kfz-Steuer": 18,
+                "Kleidung": 3,
+                "Krankenversicherungsbeitrag": 41,
+                "Körperpflege, Drogerieartikel": 20,
+                "Lisa": 36,
+                "Medikamente": 21,
+                "Möbel": 8,
+                "Nahrungsmittel": 1,
+                "Oma Lilo": 39,
+                "Reparaturen, Renovierung": 12,
+                "Restaurantbesuche": 2,
+                "Siemens Casino": 31,
+                "Sonstige Fahrzeugkosten": 19,
+                "Sonstige Freizeitausgaben": 29,
+                "Sonstige Haushaltskosten": 22,
+                "Sonstige Wohnungskosten": 15,
+                "Sonstiges": 35,
+                "Steuer": 38,
+                "Strom": 11,
+                "Tageszeitung": 32,
+                "Taschengeld": 34,
+                "Telefon": 14,
+                "Unterhaltungselektronik": 16,
+                "Urlaub": 4,
+                "Veranstaltungen": 25,
+                "Vereinsbeiträge": 24,
+                "Versicherungen": 30,
+                "Wasser": 10,
+                "Zeitschriften": 26,
+                "Öffentliche Verkehrsmittel": 7
+              },
+              "renameByName": {
+                "Jahr\\Kategoriename": "Jahr"
+              }
+            }
+          }
+        ],
+        "type": "barchart"
+      }
+    ],
+    "preload": false,
+    "refresh": "",
+    "schemaVersion": 42,
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": [
+              "Wasser",
+              "Strom",
+              "Heizung"
+            ],
+            "value": [
+              "Wasser",
+              "Strom",
+              "Heizung"
+            ]
+          },
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "cefbjrlzoh3i8d"
+          },
+          "definition": "",
+          "includeAll": true,
+          "multi": true,
+          "name": "Kategorien",
+          "options": [],
+          "query": {
+            "infinityQuery": {
+              "columns": [],
+              "filters": [],
+              "format": "table",
+              "parser": "backend",
+              "refId": "variable",
+              "root_selector": "Table1",
+              "source": "url",
+              "type": "json",
+              "url": "/api/ExecQuery",
+              "url_options": {
+                "body_content_type": "text/plain",
+                "body_type": "raw",
+                "data": "select Kategoriename\r\nfrom Kategorie\r\nwhere BaumID = 1 and SortierID in (112,128,139,151,175)",
+                "method": "POST"
+              }
+            },
+            "query": "",
+            "queryType": "infinity"
+          },
+          "refresh": 1,
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Jahressummen für Kategorienauswahl",
+    "weekStart": ""
+  }
+}
