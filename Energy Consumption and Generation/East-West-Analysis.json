@@ -35,7 +35,7 @@
         "title": "Source (GitHub)",
         "tooltip": "View source file in repository",
         "type": "link",
-        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/Energy-Consumption-and-Generation.json"
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/East-West-Analysis.json"
       }
     ],
     "panels": [
@@ -419,7 +419,7 @@
     },
     "timepicker": {},
     "timezone": "browser",
-    "title": "East/West Analysis Copy",
+    "title": "East/West Analysis",
     "weekStart": ""
   }
 }
