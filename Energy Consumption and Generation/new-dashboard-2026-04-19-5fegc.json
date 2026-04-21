@@ -24,7 +24,20 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "links": [],
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/new-dashboard-2026-04-19-5fegc.json"
+      }
+    ],
     "panels": [
       {
         "datasource": {
@@ -210,7 +223,7 @@
                 },
                 {
                   "color": "green",
-                  "value": 26.2
+                  "value": 26.5
                 },
                 {
                   "color": "red",
@@ -285,7 +298,7 @@
       "list": []
     },
     "time": {
-      "from": "now-12h",
+      "from": "now-7d",
       "to": "now"
     },
     "timepicker": {},
