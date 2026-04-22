@@ -1064,6 +1064,246 @@
             "version": "12.4.2"
           }
         }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+                      },
+                      "group": "influxdb",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "query": "import \"date\"\r\nimport \"timezone\"\r\noption location = timezone.location(name: \"Europe/Berlin\")\r\n\r\nt0 = date.truncate(t: -30d, unit: 1d)\r\nt1 = v.timeRangeStop\r\n\r\nfrom(bucket: \"homedata_reduced\")\r\n\t|\u003e range(start: t0, stop: t1)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /cachedEnergyData\\./)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n\t|\u003e aggregateWindow(every: 1d, column: \"_value\", fn:first, timeSrc: \"_start\")\r\n\t|\u003e difference(columns: [\"_value\"])\r\n\t|\u003e timeShift(duration: -12h)\r\n\t|\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n\t|\u003e pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n\t|\u003e map (fn: (r) =\u003e ({\r\n\t\t\t\t\t\t\t_time: r._time, \r\n\t\t\t\t\t\t\ttoBatEnergy: -r[\"cachedEnergyData.toBatEnergy\"], \r\n\t\t\t\t\t\t\tfromBatEnergy: r[\"cachedEnergyData.fromBatEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyPos: r[\"cachedEnergyData.fromGridEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyNeg: -r[\"cachedEnergyData.toGridEnergy\"], \r\n\t\t\t\t\t\t\tSolarEnergy: r[\"cachedEnergyData.solarEnergy\"],\r\n\t\t\t\t\t\t}))\r\n\t|\u003e map(fn: (r) =\u003e ({r with consumedEnergy: -(r.GridEnergyPos + r.GridEnergyNeg + r.SolarEnergy + r.fromBatEnergy + r.toBatEnergy)}))\r\n\t|\u003e sort(columns: [\"_time\"], desc: false)\r\n\t|\u003e yield(name: \"result\")"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {},
+                      "includeByName": {},
+                      "indexByName": {
+                        "GridEnergyNeg": 2,
+                        "GridEnergyPos": 1,
+                        "SolarEnergy": 3,
+                        "_time": 0,
+                        "consumedEnergy": 6,
+                        "fromBatEnergy": 4,
+                        "toBatEnergy": 5
+                      },
+                      "renameByName": {
+                        "GridEnergyPos": "GridEnergy"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 9,
+          "links": [],
+          "title": "Energy Flow hourwise",
+          "transparent": true,
+          "vizConfig": {
+            "group": "barchart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 74,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 1,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "kwatth"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "SolarEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "toBatEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "consumedEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "light-yellow",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "_time"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "time: MM-DD"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridEnergyNeg"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "semi-dark-red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "fromBatEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "light-blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": ""
+                    },
+                    "properties": []
+                  }
+                ]
+              },
+              "options": {
+                "barRadius": 0.25,
+                "barWidth": 0.92,
+                "fullHighlight": false,
+                "groupWidth": 0.75,
+                "legend": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                },
+                "xTickLabelRotation": -45,
+                "xTickLabelSpacing": 0
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
       }
     },
     "layout": {
@@ -1146,6 +1386,32 @@
                 }
               },
               "title": "Gauges"
+            }
+          },
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "layout": {
+                "kind": "AutoGridLayout",
+                "spec": {
+                  "columnWidthMode": "standard",
+                  "fillScreen": true,
+                  "items": [
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-9"
+                        }
+                      }
+                    }
+                  ],
+                  "maxColumnCount": 3,
+                  "rowHeightMode": "standard"
+                }
+              },
+              "title": "Daily Table"
             }
           },
           {
