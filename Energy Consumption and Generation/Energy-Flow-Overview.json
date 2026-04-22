@@ -357,7 +357,7 @@
                 ],
                 "legend": {
                   "displayMode": "list",
-                  "placement": "right",
+                  "placement": "bottom",
                   "showLegend": true,
                   "values": [
                     "percent",
@@ -503,7 +503,7 @@
                 ],
                 "legend": {
                   "displayMode": "list",
-                  "placement": "right",
+                  "placement": "bottom",
                   "showLegend": true,
                   "values": [
                     "percent",
