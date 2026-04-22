@@ -90,7 +90,7 @@
                 "overrides": []
               },
               "options": {
-                "barShape": "flat",
+                "barShape": "rounded",
                 "barWidthFactor": 0.5,
                 "effects": {
                   "barGlow": false,
@@ -523,7 +523,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -561,7 +562,7 @@
                 "xTickLabelSpacing": 0
               }
             },
-            "version": "11.5.0"
+            "version": "12.4.2"
           }
         }
       }
@@ -638,7 +639,20 @@
         ]
       }
     },
-    "links": [],
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/Garage-PV-Equipment.json"
+      }
+    ],
     "liveNow": false,
     "preload": false,
     "tags": [],
@@ -662,7 +676,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "Garage PV equipment Copy",
+    "title": "Garage PV equipment",
     "variables": []
   }
 }
