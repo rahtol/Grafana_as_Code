@@ -885,6 +885,7 @@
                 "kind": "AutoGridLayout",
                 "spec": {
                   "columnWidthMode": "standard",
+                  "fillScreen": true,
                   "items": [
                     {
                       "kind": "AutoGridLayoutItem",
@@ -897,7 +898,7 @@
                     }
                   ],
                   "maxColumnCount": 3,
-                  "rowHeightMode": "standard"
+                  "rowHeightMode": "tall"
                 }
               },
               "title": "Hourly Table"
@@ -910,6 +911,7 @@
                 "kind": "AutoGridLayout",
                 "spec": {
                   "columnWidthMode": "standard",
+                  "fillScreen": true,
                   "items": [
                     {
                       "kind": "AutoGridLayoutItem",
@@ -922,7 +924,7 @@
                     }
                   ],
                   "maxColumnCount": 3,
-                  "rowHeightMode": "standard"
+                  "rowHeightMode": "tall"
                 }
               },
               "title": "Hourly Diagram"
