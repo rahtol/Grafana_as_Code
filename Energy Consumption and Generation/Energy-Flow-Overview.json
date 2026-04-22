@@ -1,0 +1,937 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2beta1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "ddfjuhcj84j474a"
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true,
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "query": {
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": {},
+            "version": "v0"
+          }
+        }
+      }
+    ],
+    "cursorSync": "Off",
+    "description": "",
+    "editable": true,
+    "elements": {
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+                      },
+                      "group": "influxdb",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "query": "import \"interpolate\"\r\nimport \"date\"\r\n\r\ndt = (int(v:v.timeRangeStop) - int(v:v.timeRangeStart)) / 1000000000\r\ntSlot = if dt \u003c 21600 then (if dt \u003c 7200 then (if dt \u003c 1800 then 5s else 1m) else 5m) else 15m\r\nt = {timeRangeStart: v.timeRangeStart, timeRangeStop: v.timeRangeStop, windowPeriod: tSlot}\r\n\r\n// using prefix \"m\" for _measurement here\r\nmGrid = \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\"\r\nmFromBat = \"mqtt.0.T2SGF72095.ACDISPLAY\"\r\nmToBat = \"mqtt.0.T2MG2CAA11.ACDISPLAY\"\r\nmSolar = \"mqtt.0.solar.116183777340.0.power\"\r\n\r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: date.sub(d: 2m, from: t.timeRangeStart), stop: date.add(d: 1m, to: t.timeRangeStop))\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] ==  mToBat or \r\n                       r[\"_measurement\"] == mSolar or \r\n                       r[\"_measurement\"] ==  mGrid or\r\n                       r[\"_measurement\"] == mFromBat)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e interpolate.linear(every: tSlot) \r\n  |\u003e aggregateWindow(every: tSlot, column: \"_value\", fn:mean)\r\n  |\u003e range(start: t.timeRangeStart, stop: t.timeRangeStop)\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n  |\u003e rename(columns: {\"mqtt.0.T2MG2CAA11.ACDISPLAY\": \"toBatPower\", \r\n                      \"mqtt.0.T2SGF72095.ACDISPLAY\": \"fromBatPower\",\r\n                      \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\": \"GridPower\",\r\n                      \"mqtt.0.solar.116183777340.0.power\": \"SolarPower\"})\r\n  |\u003e map(fn: (r) =\u003e ({ r with consumedPower: r.GridPower + r.SolarPower + r.fromBatPower - r.toBatPower}))"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {},
+                      "indexByName": {
+                        "GridPower": 1,
+                        "SolarPower": 2,
+                        "_time": 0,
+                        "consumedPower": 5,
+                        "fromBatPower": 3,
+                        "toBatPower": 4
+                      },
+                      "renameByName": {}
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "x-axis time resolution depending on x-axis dispaly range :\u003cbr\u003e\n5s: range \u003c 30m\u003cbr\u003e\n1m: range \u003c 2h\u003cbr\u003e\n5m: range \u003c 6h\u003cbr\u003e\n15m: else  ",
+          "id": 2,
+          "links": [],
+          "title": "Power Flow over Time",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "log": 10,
+                      "type": "log"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "min": 128,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "watt"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "SolarPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "toBatPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "consumedPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "yellow",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+                      },
+                      "group": "influxdb",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "query": "import \"interpolate\"\r\nimport \"date\"\r\nimport \"math\"\r\n\r\n// using prefix \"m\" for _measurement here\r\nmGrid = \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\"\r\nmFromBat = \"mqtt.0.T2SGF72095.ACDISPLAY\"\r\nmToBat = \"mqtt.0.T2MG2CAA11.ACDISPLAY\"\r\nmSolar = \"mqtt.0.solar.116183777340.0.power\"\r\n\r\ntDuration = 3m\r\ntWindow = 1s\r\n\r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: duration (v: -int(v: tDuration)))\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] ==  mToBat or \r\n                       r[\"_measurement\"] == mSolar or \r\n                       r[\"_measurement\"] ==  mGrid or\r\n                       r[\"_measurement\"] == mFromBat)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e interpolate.linear(every: tWindow) \r\n  |\u003e aggregateWindow(every: tWindow, column: \"_value\", fn:last)\r\n  |\u003e fill(usePrevious: true)\r\n  |\u003e last()\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n  |\u003e rename(columns: {\"mqtt.0.T2MG2CAA11.ACDISPLAY\": \"toBatPower\", \r\n                      \"mqtt.0.T2SGF72095.ACDISPLAY\": \"fromBatPower\",\r\n                      \"shelly.0.shellypro3em#0cb815fd0400#1.EM0.TotalActivePower\": \"GridPowerPosNeg\",\r\n                      \"mqtt.0.solar.116183777340.0.power\": \"SolarPower\"})\r\n  |\u003e map(fn: (r) =\u003e ({ r with GridPowerPos: if r.GridPowerPosNeg \u003c 0.0 then 0.0 else math.round(x: r.GridPowerPosNeg), \r\n                              GridPowerNeg: if r.GridPowerPosNeg \u003e 0.0 then 0.0 else math.round(x: -r.GridPowerPosNeg)}))\r\n  |\u003e map(fn: (r) =\u003e ({ r with consumedPower: r.GridPowerPosNeg + r.SolarPower + r.fromBatPower - r.toBatPower}))\r\n "
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {
+                        "GridPowerNeg": true,
+                        "GridPowerPosNeg": true,
+                        "consumedPower": true,
+                        "toBatPower": true
+                      },
+                      "includeByName": {},
+                      "indexByName": {
+                        "GridPower": 1,
+                        "SolarPower": 2,
+                        "_time": 0,
+                        "fromBatPower": 3
+                      },
+                      "renameByName": {
+                        "GridPowerPos": "GridPower"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 3,
+          "links": [],
+          "title": "Power Sources",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "decimals": 0,
+                  "unit": "watt"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "SolarPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "fromBatPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "super-light-blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "displayLabels": [
+                  "percent",
+                  "value"
+                ],
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "percent",
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "-- Dashboard --"
+                      },
+                      "group": "datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "panelId": 3
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {
+                        "GridPower": true,
+                        "GridPowerPos": true,
+                        "GridPowerPosNeg": true,
+                        "SolarPower": true,
+                        "fromBatPower": true,
+                        "toBatPower": false
+                      },
+                      "includeByName": {},
+                      "indexByName": {
+                        "_time": 0,
+                        "consumedPower": 2,
+                        "toBatPower": 1
+                      },
+                      "renameByName": {
+                        "GridPowerPos": "GridPower"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 4,
+          "links": [],
+          "title": "Power Usage",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "decimals": 0,
+                  "unit": "watt"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "toBatPower"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridPowerNeg"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "dark-red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "displayLabels": [
+                  "percent",
+                  "value"
+                ],
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "percent",
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "group": "",
+                      "kind": "DataQuery",
+                      "spec": {},
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 5,
+          "links": [],
+          "title": "Time Range",
+          "vizConfig": {
+            "group": "text",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "code": {
+                  "language": "plaintext",
+                  "showLineNumbers": false,
+                  "showMiniMap": false
+                },
+                "content": "# ${__from:date:DD.MM.YYYY HH:mm}  to  ${__to:date:DD.MM.YYYY HH:mm}",
+                "mode": "markdown"
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+                      },
+                      "group": "influxdb",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "query": "import \"date\"\r\nimport \"timezone\"\r\noption location = timezone.location(name: \"Europe/Berlin\")\r\n\r\nt0 = date.truncate(t: v.timeRangeStart, unit: 1h)\r\nt1 = v.timeRangeStop\r\n\r\nfrom(bucket: \"homedata_reduced\")\r\n\t|\u003e range(start: t0, stop: t1)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /cachedEnergyData\\./)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n\t|\u003e aggregateWindow(every: 1h, column: \"_value\", fn:first, timeSrc: \"_start\")\r\n\t|\u003e difference(columns: [\"_value\"])\r\n\t|\u003e timeShift(duration: -30m)\r\n\t|\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n\t|\u003e pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n\t|\u003e map (fn: (r) =\u003e ({\r\n\t\t\t\t\t\t\t_time: r._time, \r\n\t\t\t\t\t\t\ttoBatEnergy: -r[\"cachedEnergyData.toBatEnergy\"], \r\n\t\t\t\t\t\t\tfromBatEnergy: r[\"cachedEnergyData.fromBatEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyPos: r[\"cachedEnergyData.fromGridEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyNeg: -r[\"cachedEnergyData.toGridEnergy\"], \r\n\t\t\t\t\t\t\tSolarEnergy: r[\"cachedEnergyData.solarEnergy\"],\r\n\t\t\t\t\t\t}))\r\n\t|\u003e map(fn: (r) =\u003e ({r with consumedEnergy: -(r.GridEnergyPos + r.GridEnergyNeg + r.SolarEnergy + r.fromBatEnergy + r.toBatEnergy)}))\r\n\t|\u003e sort(columns: [\"_time\"], desc: false)\r\n\t|\u003e yield(name: \"result\")"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {},
+                      "includeByName": {},
+                      "indexByName": {
+                        "GridEnergyNeg": 2,
+                        "GridEnergyPos": 1,
+                        "SolarEnergy": 3,
+                        "_time": 0,
+                        "consumedEnergy": 6,
+                        "fromBatEnergy": 4,
+                        "toBatEnergy": 5
+                      },
+                      "renameByName": {
+                        "GridEnergyPos": "GridEnergy"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 6,
+          "links": [],
+          "title": "Energy Flow hourwise",
+          "transparent": true,
+          "vizConfig": {
+            "group": "barchart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 74,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 1,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "kwatth"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "SolarEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "toBatEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "consumedEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "light-yellow",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "_time"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "time: HH:mm"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "GridEnergyNeg"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "semi-dark-red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "fromBatEnergy"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "light-blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": ""
+                    },
+                    "properties": []
+                  }
+                ]
+              },
+              "options": {
+                "barRadius": 0.25,
+                "barWidth": 0.92,
+                "fullHighlight": false,
+                "groupWidth": 0.75,
+                "legend": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "displayMode": "list",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                },
+                "xTickLabelRotation": -45,
+                "xTickLabelSpacing": 0
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": [
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-5"
+              },
+              "height": 4,
+              "width": 24,
+              "x": 0,
+              "y": 0
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              },
+              "height": 8,
+              "width": 12,
+              "x": 0,
+              "y": 4
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-4"
+              },
+              "height": 8,
+              "width": 12,
+              "x": 12,
+              "y": 4
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-6"
+              },
+              "height": 19,
+              "width": 24,
+              "x": 0,
+              "y": 12
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-2"
+              },
+              "height": 17,
+              "width": 24,
+              "x": 0,
+              "y": 31
+            }
+          }
+        ]
+      }
+    },
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/new-dashboard-2026-04-19-6d95z.json"
+      }
+    ],
+    "liveNow": false,
+    "preload": false,
+    "tags": [],
+    "timeSettings": {
+      "autoRefresh": "5s",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "fiscalYearStartMonth": 0,
+      "from": "now-24h",
+      "hideTimepicker": false,
+      "timezone": "browser",
+      "to": "now"
+    },
+    "title": "Energy Flow Overview Copy",
+    "variables": []
+  }
+}
