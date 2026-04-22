@@ -163,7 +163,8 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
-                    "mode": "palette-classic"
+                    "fixedColor": "super-light-blue",
+                    "mode": "shades"
                   },
                   "custom": {
                     "axisBorderShow": false,
@@ -218,8 +219,8 @@
                 ]
               },
               "options": {
-                "barRadius": 0,
-                "barWidth": 0.97,
+                "barRadius": 0.1,
+                "barWidth": 0.9,
                 "fullHighlight": false,
                 "groupWidth": 0.7,
                 "legend": {
@@ -494,7 +495,8 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
-                    "mode": "palette-classic"
+                    "fixedColor": "super-light-orange",
+                    "mode": "shades"
                   },
                   "custom": {
                     "axisBorderShow": false,
@@ -537,8 +539,8 @@
                 "overrides": []
               },
               "options": {
-                "barRadius": 0,
-                "barWidth": 0.97,
+                "barRadius": 0.1,
+                "barWidth": 0.9,
                 "fullHighlight": false,
                 "groupWidth": 0.7,
                 "legend": {
