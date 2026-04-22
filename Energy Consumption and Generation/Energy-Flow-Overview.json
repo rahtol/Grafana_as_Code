@@ -210,7 +210,7 @@
                 "legend": {
                   "calcs": [],
                   "displayMode": "list",
-                  "placement": "right",
+                  "placement": "bottom",
                   "showLegend": true
                 },
                 "tooltip": {
@@ -802,7 +802,7 @@
                     "sum"
                   ],
                   "displayMode": "list",
-                  "placement": "right",
+                  "placement": "bottom",
                   "showLegend": true
                 },
                 "orientation": "auto",
@@ -823,72 +823,109 @@
       }
     },
     "layout": {
-      "kind": "GridLayout",
+      "kind": "TabsLayout",
       "spec": {
-        "items": [
+        "tabs": [
           {
-            "kind": "GridLayoutItem",
+            "kind": "TabsLayoutTab",
             "spec": {
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-5"
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-3"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        },
+                        "height": 4,
+                        "width": 24,
+                        "x": 0,
+                        "y": 8
+                      }
+                    }
+                  ]
+                }
               },
-              "height": 4,
-              "width": 24,
-              "x": 0,
-              "y": 0
+              "title": "Gauges"
             }
           },
           {
-            "kind": "GridLayoutItem",
+            "kind": "TabsLayoutTab",
             "spec": {
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-3"
+              "layout": {
+                "kind": "AutoGridLayout",
+                "spec": {
+                  "columnWidthMode": "standard",
+                  "items": [
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-6"
+                        }
+                      }
+                    }
+                  ],
+                  "maxColumnCount": 3,
+                  "rowHeightMode": "standard"
+                }
               },
-              "height": 8,
-              "width": 12,
-              "x": 0,
-              "y": 4
+              "title": "Hourly Table"
             }
           },
           {
-            "kind": "GridLayoutItem",
+            "kind": "TabsLayoutTab",
             "spec": {
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-4"
+              "layout": {
+                "kind": "AutoGridLayout",
+                "spec": {
+                  "columnWidthMode": "standard",
+                  "items": [
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2"
+                        }
+                      }
+                    }
+                  ],
+                  "maxColumnCount": 3,
+                  "rowHeightMode": "standard"
+                }
               },
-              "height": 8,
-              "width": 12,
-              "x": 12,
-              "y": 4
-            }
-          },
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-6"
-              },
-              "height": 19,
-              "width": 24,
-              "x": 0,
-              "y": 12
-            }
-          },
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-2"
-              },
-              "height": 17,
-              "width": 24,
-              "x": 0,
-              "y": 31
+              "title": "Hourly Diagram"
             }
           }
         ]
@@ -905,7 +942,7 @@
         "title": "Source (GitHub)",
         "tooltip": "View source file in repository",
         "type": "link",
-        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/new-dashboard-2026-04-19-6d95z.json"
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/Energy-Flow-Overview.json"
       }
     ],
     "liveNow": false,
