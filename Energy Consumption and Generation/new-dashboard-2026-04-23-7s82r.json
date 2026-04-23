@@ -86,7 +86,8 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
-                    "mode": "palette-classic"
+                    "fixedColor": "dark-blue",
+                    "mode": "fixed"
                   },
                   "custom": {
                     "axisBorderShow": false,
@@ -122,6 +123,7 @@
                       "mode": "off"
                     }
                   },
+                  "displayName": "Power",
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -134,7 +136,8 @@
                         "value": 80
                       }
                     ]
-                  }
+                  },
+                  "unit": "watt"
                 },
                 "overrides": []
               },
@@ -319,7 +322,20 @@
         ]
       }
     },
-    "links": [],
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/new-dashboard-2026-04-23-7s82r.json"
+      }
+    ],
     "liveNow": false,
     "preload": false,
     "tags": [],
