@@ -1510,7 +1510,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "Energy Flow Overview Copy",
+    "title": "Energy Flow Overview",
     "variables": []
   }
 }
