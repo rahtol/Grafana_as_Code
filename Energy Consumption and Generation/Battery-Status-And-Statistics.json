@@ -388,7 +388,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "Battery Status and Statistics Copy",
+    "title": "Battery Status and Statistics",
     "variables": []
   }
 }
