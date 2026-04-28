@@ -1,29 +1,356 @@
 {
-  "apiVersion": "dashboard.grafana.app/v1beta1",
+  "apiVersion": "dashboard.grafana.app/v2beta1",
   "kind": "Dashboard",
   "metadata": {
     "name": "ddfjjtu36z6p6ob"
   },
   "spec": {
-    "annotations": {
-      "list": [
-        {
-          "builtIn": 1,
-          "datasource": {
-            "type": "grafana",
-            "uid": "-- Grafana --"
-          },
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true,
           "enable": true,
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
           "name": "Annotations \u0026 Alerts",
-          "type": "dashboard"
+          "query": {
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": {},
+            "version": "v0"
+          }
         }
-      ]
-    },
+      }
+    ],
+    "cursorSync": "Off",
+    "description": "",
     "editable": true,
-    "fiscalYearStartMonth": 0,
-    "graphTooltip": 0,
+    "elements": {
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+                      },
+                      "group": "influxdb",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "query": "mVBat = \"mqtt.0.T2MG2CAA11.VBAT\"\r\nmVBatT2SG = \"mqtt.0.T2SGF72095.VBAT\"\r\n\r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] ==  mVBat or r[\"_measurement\"] ==  mVBatT2SG)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: 1m, column: \"_value\", fn: mean)\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n  |\u003e rename(columns: {\"mqtt.0.T2MG2CAA11.VBAT\": \"VBat\", \"mqtt.0.T2SGF72095.VBAT\": \"VBatT2SG\"})\r\n\r\n"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 2,
+          "links": [],
+          "title": "Battery Voltage",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "yellow",
+                    "mode": "fixed"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed+area"
+                    }
+                  },
+                  "max": 29.5,
+                  "min": 23.5,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      },
+                      {
+                        "color": "#EAB839",
+                        "value": 24
+                      },
+                      {
+                        "color": "green",
+                        "value": 26.5
+                      },
+                      {
+                        "color": "red",
+                        "value": 28.8
+                      }
+                    ]
+                  },
+                  "unit": "volt"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "VBatT2SG"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "dark-purple",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "lastNotNull",
+                    "min",
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
+                      },
+                      "group": "influxdb",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "query": "from(bucket: \"homedata_reduced\")\r\n  |\u003e range(start: -1d, stop: now())\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"cachedEnergyData.fromBatEnergy\" or r[\"_measurement\"] == \"cachedEnergyData.toBatEnergy\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e last()\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n  |\u003e rename(columns: {\"cachedEnergyData.toBatEnergy\": \"toBatEnergy\", \r\n                      \"cachedEnergyData.fromBatEnergy\": \"fromBatEnergy\"})"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "alias": "Efficiency",
+                      "binary": {
+                        "left": {
+                          "matcher": {
+                            "id": "byName",
+                            "options": "fromBatEnergy"
+                          }
+                        },
+                        "operator": "/",
+                        "right": {
+                          "matcher": {
+                            "id": "byName",
+                            "options": "toBatEnergy"
+                          }
+                        }
+                      },
+                      "mode": "binary",
+                      "reduce": {
+                        "reducer": "sum"
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {},
+                      "includeByName": {},
+                      "indexByName": {
+                        "Efficiency": 3,
+                        "_time": 0,
+                        "fromBatEnergy": 2,
+                        "toBatEnergy": 1
+                      },
+                      "renameByName": {}
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 3,
+          "links": [],
+          "title": "Battery Energy Totals",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#a3a7ad",
+                    "mode": "fixed"
+                  },
+                  "decimals": 1,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "kwatth"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Efficiency"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "percentunit"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {},
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "12.4.2"
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": [
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              },
+              "height": 8,
+              "width": 12,
+              "x": 0,
+              "y": 0
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-2"
+              },
+              "height": 13,
+              "width": 24,
+              "x": 0,
+              "y": 8
+            }
+          }
+        ]
+      }
+    },
     "links": [
       {
         "asDropdown": false,
@@ -35,275 +362,33 @@
         "title": "Source (GitHub)",
         "tooltip": "View source file in repository",
         "type": "link",
-        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/new-dashboard-2026-04-19-5fegc.json"
+        "url": "https://github.com/rahtol/Grafana_as_Code/blob/main/Energy%20Consumption%20and%20Generation/attic/new-dashboard-2026-04-19-5fegc.json"
       }
     ],
-    "panels": [
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "fixedColor": "#a3a7ad",
-              "mode": "fixed"
-            },
-            "decimals": 1,
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": 0
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "kwatth"
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Efficiency"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "percentunit"
-                }
-              ]
-            }
-          ]
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 0
-        },
-        "id": 3,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showPercentChange": false,
-          "text": {},
-          "textMode": "auto",
-          "wideLayout": true
-        },
-        "pluginVersion": "12.4.2",
-        "targets": [
-          {
-            "datasource": {
-              "type": "influxdb",
-              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
-            },
-            "query": "from(bucket: \"homedata_reduced\")\r\n  |\u003e range(start: -1d, stop: now())\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] == \"cachedEnergyData.fromBatEnergy\" or r[\"_measurement\"] == \"cachedEnergyData.toBatEnergy\")\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e last()\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n  |\u003e rename(columns: {\"cachedEnergyData.toBatEnergy\": \"toBatEnergy\", \r\n                      \"cachedEnergyData.fromBatEnergy\": \"fromBatEnergy\"})",
-            "refId": "A"
-          }
-        ],
-        "title": "Battery Energy Totals",
-        "transformations": [
-          {
-            "id": "calculateField",
-            "options": {
-              "alias": "Efficiency",
-              "binary": {
-                "left": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "fromBatEnergy"
-                  }
-                },
-                "operator": "/",
-                "right": {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "toBatEnergy"
-                  }
-                }
-              },
-              "mode": "binary",
-              "reduce": {
-                "reducer": "sum"
-              }
-            }
-          },
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {},
-              "includeByName": {},
-              "indexByName": {
-                "Efficiency": 3,
-                "_time": 0,
-                "fromBatEnergy": 2,
-                "toBatEnergy": 1
-              },
-              "renameByName": {}
-            }
-          }
-        ],
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "fixedColor": "yellow",
-              "mode": "fixed"
-            },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "barWidthFactor": 0.6,
-              "drawStyle": "line",
-              "fillOpacity": 0,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 1,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "showValues": false,
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "none"
-              },
-              "thresholdsStyle": {
-                "mode": "dashed+area"
-              }
-            },
-            "mappings": [],
-            "max": 29.5,
-            "min": 23.5,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "red",
-                  "value": 0
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 24
-                },
-                {
-                  "color": "green",
-                  "value": 26.5
-                },
-                {
-                  "color": "red",
-                  "value": 28.8
-                }
-              ]
-            },
-            "unit": "volt"
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "VBatT2SG"
-              },
-              "properties": [
-                {
-                  "id": "color",
-                  "value": {
-                    "fixedColor": "dark-purple",
-                    "mode": "fixed"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        "gridPos": {
-          "h": 13,
-          "w": 24,
-          "x": 0,
-          "y": 8
-        },
-        "id": 2,
-        "options": {
-          "legend": {
-            "calcs": [
-              "lastNotNull",
-              "min",
-              "max"
-            ],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
-          },
-          "tooltip": {
-            "hideZeros": false,
-            "mode": "single",
-            "sort": "none"
-          }
-        },
-        "pluginVersion": "12.4.2",
-        "targets": [
-          {
-            "datasource": {
-              "type": "influxdb",
-              "uid": "bfe557a6-4d7b-46cc-9430-e641780abf2b"
-            },
-            "query": "mVBat = \"mqtt.0.T2MG2CAA11.VBAT\"\r\nmVBatT2SG = \"mqtt.0.T2SGF72095.VBAT\"\r\n\r\nfrom(bucket: \"homedata\")\r\n  |\u003e range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_measurement\"] ==  mVBat or r[\"_measurement\"] ==  mVBatT2SG)\r\n  |\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n  |\u003e aggregateWindow(every: 1m, column: \"_value\", fn: mean)\r\n  |\u003e pivot(rowKey:[\"_time\"], columnKey:[\"_measurement\"], valueColumn: \"_value\")\r\n  |\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n  |\u003e rename(columns: {\"mqtt.0.T2MG2CAA11.VBAT\": \"VBat\", \"mqtt.0.T2SGF72095.VBAT\": \"VBatT2SG\"})\r\n\r\n",
-            "refId": "A"
-          }
-        ],
-        "title": "Battery Voltage",
-        "type": "timeseries"
-      }
-    ],
+    "liveNow": false,
     "preload": false,
-    "refresh": "30s",
-    "schemaVersion": 42,
     "tags": [],
-    "templating": {
-      "list": []
-    },
-    "time": {
+    "timeSettings": {
+      "autoRefresh": "30s",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "fiscalYearStartMonth": 0,
       "from": "now-7d",
+      "hideTimepicker": false,
+      "timezone": "browser",
       "to": "now"
     },
-    "timepicker": {},
-    "timezone": "browser",
-    "title": "Battery Status and Statistics",
-    "weekStart": ""
+    "title": "Obsolete: Battery Status and Statistics",
+    "variables": []
   }
 }
