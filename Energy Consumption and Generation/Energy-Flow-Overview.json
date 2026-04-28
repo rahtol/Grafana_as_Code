@@ -48,7 +48,7 @@
                       "group": "influxdb",
                       "kind": "DataQuery",
                       "spec": {
-                        "query": "import \"date\"\r\nimport \"timezone\"\r\noption location = timezone.location(name: \"Europe/Berlin\")\r\n\r\nt0 = date.truncate(t: -24mo, unit: 1mo)\r\nt1 = v.timeRangeStop\r\n\r\nfrom(bucket: \"homedata_reduced\")\r\n\t|\u003e range(start: t0, stop: t1)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /cachedEnergyData\\./)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n\t|\u003e aggregateWindow(every: 1mo, column: \"_value\", fn:first, timeSrc: \"_start\")\r\n\t|\u003e difference(columns: [\"_value\"])\r\n\t|\u003e timeShift(duration: -15d)\r\n\t|\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n\t|\u003e pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n\t|\u003e map (fn: (r) =\u003e ({\r\n\t\t\t\t\t\t\t_time: r._time, \r\n\t\t\t\t\t\t\ttoBatEnergy: -r[\"cachedEnergyData.toBatEnergy\"], \r\n\t\t\t\t\t\t\tfromBatEnergy: r[\"cachedEnergyData.fromBatEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyPos: r[\"cachedEnergyData.fromGridEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyNeg: -r[\"cachedEnergyData.toGridEnergy\"], \r\n\t\t\t\t\t\t\tSolarEnergy: r[\"cachedEnergyData.solarEnergy\"],\r\n\t\t\t\t\t\t}))\r\n\t|\u003e map(fn: (r) =\u003e ({r with consumedEnergy: -(r.GridEnergyPos + r.GridEnergyNeg + r.SolarEnergy + r.fromBatEnergy + r.toBatEnergy)}))\r\n\t|\u003e sort(columns: [\"_time\"], desc: false)\r\n\t|\u003e yield(name: \"result\")"
+                        "query": "import \"date\"\r\nimport \"timezone\"\r\noption location = timezone.location(name: \"Europe/Berlin\")\r\n\r\nt0 = date.truncate(t: 2023-07-01, unit: 1mo)\r\nt1 = v.timeRangeStop\r\n\r\nfrom(bucket: \"homedata_reduced\")\r\n\t|\u003e range(start: t0, stop: t1)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_measurement\"] =~ /cachedEnergyData\\./)\r\n\t|\u003e filter(fn: (r) =\u003e r[\"_field\"] == \"value\")\r\n\t|\u003e aggregateWindow(every: 1mo, column: \"_value\", fn:first, timeSrc: \"_start\")\r\n\t|\u003e difference(columns: [\"_value\"])\r\n\t|\u003e timeShift(duration: -15d)\r\n\t|\u003e drop(columns: [\"_start\", \"_stop\", \"_field\"])\r\n\t|\u003e pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n\t|\u003e map (fn: (r) =\u003e ({\r\n\t\t\t\t\t\t\t_time: r._time, \r\n\t\t\t\t\t\t\ttoBatEnergy: -r[\"cachedEnergyData.toBatEnergy\"], \r\n\t\t\t\t\t\t\tfromBatEnergy: r[\"cachedEnergyData.fromBatEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyPos: r[\"cachedEnergyData.fromGridEnergy\"], \r\n\t\t\t\t\t\t\tGridEnergyNeg: -r[\"cachedEnergyData.toGridEnergy\"], \r\n\t\t\t\t\t\t\tSolarEnergy: r[\"cachedEnergyData.solarEnergy\"],\r\n\t\t\t\t\t\t}))\r\n\t|\u003e map(fn: (r) =\u003e ({r with consumedEnergy: -(r.GridEnergyPos + r.GridEnergyNeg + r.SolarEnergy + r.fromBatEnergy + r.toBatEnergy)}))\r\n\t|\u003e sort(columns: [\"_time\"], desc: false)\r\n\t|\u003e yield(name: \"result\")"
                       },
                       "version": "v0"
                     },
@@ -77,6 +77,44 @@
                       "renameByName": {
                         "GridEnergyPos": "GridEnergy"
                       }
+                    }
+                  }
+                },
+                {
+                  "kind": "sortBy",
+                  "spec": {
+                    "id": "sortBy",
+                    "options": {
+                      "fields": {},
+                      "sort": [
+                        {
+                          "desc": true,
+                          "field": "_time"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "kind": "limit",
+                  "spec": {
+                    "id": "limit",
+                    "options": {
+                      "limitField": "12"
+                    }
+                  }
+                },
+                {
+                  "kind": "sortBy",
+                  "spec": {
+                    "id": "sortBy",
+                    "options": {
+                      "fields": {},
+                      "sort": [
+                        {
+                          "field": "_time"
+                        }
+                      ]
                     }
                   }
                 }
@@ -2207,31 +2245,36 @@
             "kind": "TabsLayoutTab",
             "spec": {
               "layout": {
-                "kind": "AutoGridLayout",
+                "kind": "GridLayout",
                 "spec": {
-                  "columnWidthMode": "standard",
                   "items": [
                     {
-                      "kind": "AutoGridLayoutItem",
+                      "kind": "GridLayoutItem",
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-11"
-                        }
+                        },
+                        "height": 11,
+                        "width": 16,
+                        "x": 0,
+                        "y": 0
                       }
                     },
                     {
-                      "kind": "AutoGridLayoutItem",
+                      "kind": "GridLayoutItem",
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-12"
-                        }
+                        },
+                        "height": 15,
+                        "width": 24,
+                        "x": 0,
+                        "y": 11
                       }
                     }
-                  ],
-                  "maxColumnCount": 3,
-                  "rowHeightMode": "standard"
+                  ]
                 }
               },
               "title": "Yearly Overview"
