@@ -701,7 +701,7 @@
           "description": "",
           "id": 12,
           "links": [],
-          "title": "2025",
+          "title": "Yearly Overview #2",
           "vizConfig": {
             "group": "barchart",
             "kind": "VizConfig",
@@ -837,8 +837,8 @@
                       }
                     ]
                   }
-				]
-			  },
+                ]
+              },
               "options": {
                 "barRadius": 0,
                 "barWidth": 0.97,
@@ -2392,7 +2392,7 @@
     "preload": false,
     "tags": [],
     "timeSettings": {
-      "autoRefresh": "1d",
+      "autoRefresh": "auto",
       "autoRefreshIntervals": [
         "5s",
         "10s",
