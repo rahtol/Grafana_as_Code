@@ -989,10 +989,93 @@
                         "toBatEnergy": 4
                       },
                       "renameByName": {
+                        "GridEnergyNeg": "GridEnergyNeg1",
                         "GridEnergyPos": "GridEnergy",
                         "SolarEnergy": "",
-                        "_time": "Date"
+                        "_time": "Date",
+                        "consumedEnergy": "consumedenergy1",
+                        "toBatEnergy": "toBatEnergy1"
                       }
+                    }
+                  }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "alias": "consumedEnergy",
+                      "mode": "unary",
+                      "reduce": {
+                        "reducer": "sum"
+                      },
+                      "replaceFields": false,
+                      "unary": {
+                        "fieldName": "consumedenergy1",
+                        "operator": "abs"
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "alias": "toBatEnergy",
+                      "mode": "unary",
+                      "reduce": {
+                        "reducer": "sum"
+                      },
+                      "unary": {
+                        "fieldName": "toBatEnergy1",
+                        "operator": "abs"
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "calculateField",
+                  "spec": {
+                    "id": "calculateField",
+                    "options": {
+                      "alias": "GridEnergyNeg",
+                      "mode": "unary",
+                      "reduce": {
+                        "reducer": "sum"
+                      },
+                      "unary": {
+                        "fieldName": "GridEnergyNeg1",
+                        "operator": "abs"
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "organize",
+                  "spec": {
+                    "id": "organize",
+                    "options": {
+                      "excludeByName": {
+                        "GridEnergyNeg": false,
+                        "GridEnergyNeg1": true,
+                        "consumedenergy1": true,
+                        "toBatEnergy1": true
+                      },
+                      "includeByName": {},
+                      "indexByName": {
+                        "Date": 0,
+                        "GridEnergy": 2,
+                        "GridEnergyNeg": 6,
+                        "GridEnergyNeg1": 9,
+                        "SolarEnergy": 3,
+                        "consumedEnergy": 1,
+                        "consumedenergy1": 7,
+                        "fromBatEnergy": 5,
+                        "toBatEnergy": 4,
+                        "toBatEnergy1": 8
+                      },
+                      "renameByName": {}
                     }
                   }
                 }
@@ -1022,6 +1105,8 @@
                     },
                     "inspect": false
                   },
+                  "max": 10,
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -1034,7 +1119,8 @@
                         "value": 80
                       }
                     ]
-                  }
+                  },
+                  "unit": "kwatth"
                 },
                 "overrides": [
                   {
@@ -1046,6 +1132,7 @@
                       {
                         "id": "custom.cellOptions",
                         "value": {
+                          "mode": "basic",
                           "type": "gauge"
                         }
                       }
