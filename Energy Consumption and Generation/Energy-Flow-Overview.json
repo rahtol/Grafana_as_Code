@@ -1116,7 +1116,11 @@
                       "type": "auto"
                     },
                     "footer": {
-                      "reducers": []
+                      "reducers": [
+                        "mean",
+                        "min",
+                        "max"
+                      ]
                     },
                     "inspect": false
                   },
@@ -2659,8 +2663,8 @@
                           "kind": "ElementReference",
                           "name": "panel-14"
                         },
-                        "height": 25,
-                        "width": 24,
+                        "height": 34,
+                        "width": 23,
                         "x": 0,
                         "y": 26
                       }
