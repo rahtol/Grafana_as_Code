@@ -137,7 +137,7 @@
                     "properties": [
                       {
                         "id": "custom.width",
-                        "value": 189
+                        "value": 140
                       }
                     ]
                   },
@@ -176,6 +176,18 @@
                         "value": 166
                       }
                     ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "mqtt.0.LoRa.esp32-8A872C.no_misssed_packets"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 122
+                      }
+                    ]
                   }
                 ]
               },
@@ -185,7 +197,7 @@
                 "sortBy": [
                   {
                     "desc": false,
-                    "displayName": "no_missed_packets"
+                    "displayName": "Time"
                   }
                 ]
               }
@@ -206,8 +218,8 @@
                 "kind": "ElementReference",
                 "name": "panel-1"
               },
-              "height": 25,
-              "width": 11,
+              "height": 26,
+              "width": 12,
               "x": 0,
               "y": 0
             }
@@ -247,7 +259,7 @@
         "1d"
       ],
       "fiscalYearStartMonth": 0,
-      "from": "now-12h",
+      "from": "now-24h",
       "hideTimepicker": false,
       "timezone": "browser",
       "to": "now"
