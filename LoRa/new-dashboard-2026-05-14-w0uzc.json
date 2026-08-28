@@ -330,19 +330,23 @@
                       "mode": "none"
                     },
                     "thresholdsStyle": {
-                      "mode": "off"
+                      "mode": "area"
                     }
                   },
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green",
+                        "color": "semi-dark-orange",
                         "value": 0
                       },
                       {
-                        "color": "red",
-                        "value": 80
+                        "color": "semi-dark-green",
+                        "value": 11
+                      },
+                      {
+                        "color": "#EAB839",
+                        "value": 12
                       }
                     ]
                   }
@@ -451,7 +455,7 @@
       "timezone": "browser",
       "to": "now"
     },
-    "title": "RSSI and SNR",
+    "title": "RSSI and Packet rate",
     "variables": []
   }
 }
